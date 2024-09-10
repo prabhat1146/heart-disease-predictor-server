@@ -1,0 +1,7 @@
+# Ignore the react-app directory
+/react-app/
+
+# Other gitignore rules
+*.log
+node_modules/
+*.env
