@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import pickle
 from flask_cors import CORS
+import os
 
 app = Flask(__name__, template_folder='app/templates')
 CORS(app)  # Enable CORS for all routes
@@ -61,5 +62,7 @@ def find_heart_disease():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))  # Default to 5000 if PORT is not set
+    app.run(host='0.0.0.0', port=port, debug=True)
+
 
