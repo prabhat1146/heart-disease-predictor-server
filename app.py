@@ -4,13 +4,18 @@ import joblib
 import pickle
 from flask_cors import CORS
 import os
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 app = Flask(__name__, template_folder='app/templates')
 CORS(app)  # Enable CORS for all routes
 
 # Load the trained model
 model = joblib.load('models/random_forest_model.pkl')
-
+df = pd.read_csv('data/encoded.csv')
+X = df.drop(columns=['target'])
+y = df['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 # Load the dictionary of encoders
 with open('encoders/label_encoders.pkl', 'rb') as f:
     label_encoders = pickle.load(f)
@@ -46,11 +51,14 @@ def find_heart_disease():
         # Ensure that numerical features are of correct type
         # print(input_data)
         # Predict using the model
+
         prediction = model.predict(input_data)
-        print("Pred: ",prediction)
+        print("Pred: ",prediction[0])
         probability = model.predict_proba(input_data)[0][1]
         print("Prob: ",probability)
-
+        print(model.classes_)
+        # accuracy = accuracy_score(y_test, prediction)
+        # print(f'Accuracy: {accuracy:.2f}')
     except Exception as e:
         # Print the error for debugging purposes
         print(f"Error: {e}")
